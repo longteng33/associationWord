@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>淘宝联想词</title>
+    <style>
+
+    </style>
+    <link rel="stylesheet" href="./index.css">
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="search">
+            <input type="text">
+            <button class="btn">搜索</button>
+        </div>
+
+        <ul class="list">
+            <!-- <li>1</li>
+            <li>2</li> 
+            <li>3</li>
+            <li>4</li> -->
+        </ul>
+    </div>
+
+    <script>
+        var oInput = document.getElementsByTagName('input')[0];
+        var oUl = document.getElementsByClassName('list')[0];
+        var oLi = null;
+
+        oInput.oninput = function () {
+            var val = oInput.value;
+            var oScript = document.createElement("script");
+            // 淘宝
+            oScript.src = 'https://suggest.taobao.com/sug?q=' + val + '&callback=cbs';
+            // 百度
+            // oScript.src = 'https://www.baidu.com/sugrec?prod=pc&wd=' + val + '&cb=cbs';
+            document.body.appendChild(oScript);
+            oScript.remove();
+        }
+
+        function cbs(data) {
+            var str = '';
+            if (data.result.length > 0) {
+                oUl.style.display = 'block';
+                data.result.forEach(function (ele, index) {
+                    str += '<li class="item">' + ele[0] + '</li>';
+                    oUl.innerHTML = str;
+                    oLi = document.getElementsByClassName('item');
+                    for (var i = 0; i < oLi.length; i++) {
+                        oLi[i].onclick = function () {
+                            oInput.value=this.innerText;
+                            oUl.style.display = 'none';
+                        }
+                    }
+                })
+            } else {
+                oUl.style.display = 'none';
+            }
+        }
+
+        window.onclick=function(){
+            oUl.style.display = 'none';
+        }
+
+
+    </script>
+</body>
+
+</html>
